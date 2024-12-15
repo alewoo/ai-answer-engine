@@ -1,45 +1,79 @@
 # AI Answer Engine
 
+A powerful AI-powered answer engine built with Next.js that uses Groq for chat functionality and web scraping capabilities to provide accurate, context-aware responses.
+
+## Tech Stack
+
+- **Frontend**: Next.js, React, TypeScript
+- **Backend**: Next.js API Routes
+- **AI Integration**: Groq
+- **Web Scraping**: Cheerio, Puppeteer
+- **Rate Limiting**: Redis
+- **Deployment**: Vercel (recommended)
+
+## Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- Redis (for rate limiting)
+
 ## Getting Started
 
-First, clone the repository and install the dependencies:
+1. Clone the repository:
+
 ```bash
 git clone https://github.com/team-headstart/ai-answer-engine.git
-```
-
-Navigate to the project directory:
-```bash
 cd ai-answer-engine
 ```
 
-Then, install the dependencies:
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-Then, run the development server:
+3. Set up environment variables:
+
+```bash
+cp .env.example .env.local
+```
+
+Then edit `.env.local` with your configuration:
+
+- `GROQ_API_KEY`: Your Groq API key
+- `REDIS_URL`: Your Redis connection URL
+
+4. Run the development server:
+
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Tasks
+## Development Tasks
 
-- Take a look at the TODOs throughout the repo, namely:
+The following areas need attention:
 
-    - `src/app/page.tsx`: Update the UI and handle the API response as needed
- 
-    - `src/app/api/chat/route.ts`: Implement the chat API with Groq and web scraping with Cheerio and Puppeteer
- 
-    - `src/middleware.ts`: Implement the code here to add rate limiting with Redis
+- **Frontend (`src/app/page.tsx`)**
 
+  - Update the UI components
+  - Implement API response handling
+  - Add loading states and error handling
+
+- **Backend (`src/app/api/chat/route.ts`)**
+
+  - Implement Groq chat integration
+  - Set up web scraping with Cheerio and Puppeteer
+  - Add error handling and validation
+
+- **Middleware (`src/middleware.ts`)**
+  - Implement Redis-based rate limiting
+  - Add request validation
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-# ai-answer-engine
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial
+- [Groq Documentation](https://groq.com/docs) - learn about Groq's AI capabilities
+- [Puppeteer Documentation](https://pptr.dev/) - learn about web scraping with Puppeteer
