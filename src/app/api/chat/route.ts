@@ -4,12 +4,16 @@
 // Refer to the Cheerio docs here on how to parse HTML: https://cheerio.js.org/docs/basics/loading
 // Refer to Puppeteer docs here: https://pptr.dev/guides/what-is-puppeteer
 
+import { NextResponse } from "next/server";
+
 export async function POST(req: Request) {
   try {
+    const { message } = await req.json(); // get the message that the user types in the chat
 
+    console.log("message recieved:", message); // print out the message
 
+    return NextResponse.json({ message: message });
   } catch (error) {
-
-
+    return NextResponse.json({ message: "Error" });
   }
 }
