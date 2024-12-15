@@ -5,15 +5,57 @@
 // Refer to Puppeteer docs here: https://pptr.dev/guides/what-is-puppeteer
 
 import { NextResponse } from "next/server";
+import { getGroqResponse } from "@/app/utils/groqClient";
+import { scrapeUrl, urlPattern } from "@/app/utils/scraper";
 
 export async function POST(req: Request) {
   try {
-    const { message } = await req.json(); // get the message that the user types in the chat
+    const { message } = await req.json();
+    console.log("message received:", message);
 
-    console.log("message recieved:", message); // print out the message
+    const urlMatch = message.match(urlPattern);
+    let scrapedContent = "";
+    let userQuery = message;
 
-    return NextResponse.json({ message: message });
+    if (urlMatch) {
+      const url = urlMatch[0];
+      console.log("Url found:", url);
+      const scraperResponse = await scrapeUrl(url);
+
+      if (scraperResponse.error) {
+        return NextResponse.json({
+          message: `Error accessing the webpage: ${scraperResponse.error}. Status: ${scraperResponse.status}`,
+        });
+      }
+
+      scrapedContent = `
+        Title: ${scraperResponse.title}
+        Headings: ${scraperResponse.headings.h1} ${scraperResponse.headings.h2}
+        Description: ${scraperResponse.metaDescription}
+        Content: ${scraperResponse.content}
+      `;
+
+      // Remove the URL from the user query
+      userQuery = message.replace(url, "").trim();
+      console.log("User query:", userQuery);
+    }
+
+    const prompt = `
+    Answer my question: "${userQuery}"
+
+    Based on the following content:
+    <content>
+      ${scrapedContent}
+    </content>
+    `;
+
+    const response = await getGroqResponse(prompt);
+    return NextResponse.json({ message: response });
   } catch (error) {
-    return NextResponse.json({ message: "Error" });
+    console.error("Detailed error:", error);
+    return NextResponse.json(
+      { message: `Error: ${error.message}` },
+      { status: 500 }
+    );
   }
 }
